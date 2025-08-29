@@ -1,17 +1,21 @@
 ﻿
+using Microsoft.Extensions.Options;
+
 namespace FeedbackFormRazor.Models.Services.Feedback;
 
-public class StoreFeedbackToFile : IFeedbackSender
+public class StoreFeedbackToFile(IOptions<StoreFeedbackToFileOptions> options) : IFeedbackSender
 {
     public async Task SendFeedbackAsync(FeedbackForm feedbackForm)
     {
-        var uploadsDir = Path.Combine("wwwroot", "uploads");
+        // Змінні параметри
+        var uploadsDir = options.Value.DirectoryPath;
+
         if (!Directory.Exists(uploadsDir))
         {
             Directory.CreateDirectory(uploadsDir);
         }
 
-        var filename = Path.Combine("wwwroot", "uploads", $"feedback_{DateTime.Now:yyyyMMdd_HHmmss}.txt");
+        var filename = Path.Combine(uploadsDir, $"feedback_{DateTime.Now:yyyyMMdd_HHmmss}.txt");
         var sb = new System.Text.StringBuilder();
         sb.AppendLine($"Date: {DateTime.Now:dd.MM.yyyy HH:mm:ss}");
         sb.AppendLine($"Name: {feedbackForm.Name}");
@@ -31,7 +35,7 @@ public class StoreFeedbackToFile : IFeedbackSender
             sb.AppendLine($"Image: {feedbackForm.Image.FileName} ({feedbackForm.Image.Length} bytes)");
             var imageExt = Path.GetExtension(feedbackForm.Image.FileName).ToLower();
             var newImageName = $"image_{DateTime.Now:yyyyMMdd_HHmmss}{imageExt}";
-            var imagePath = Path.Combine("wwwroot", "uploads", newImageName);
+            var imagePath = Path.Combine(uploadsDir, newImageName);
             using var fileStream = System.IO.File.Create(imagePath);
             await feedbackForm.Image.CopyToAsync(fileStream);
         }

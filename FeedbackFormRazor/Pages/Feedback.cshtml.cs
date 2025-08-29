@@ -14,6 +14,11 @@ public class FeedbackModel(IFeedbackSender feedbackSender) : PageModel
 
     public void OnGet()
     {
+        var a = 5;
+
+        var b = a + a;
+        Console.WriteLine("Test");
+
     }
 
     // public void OnPost()

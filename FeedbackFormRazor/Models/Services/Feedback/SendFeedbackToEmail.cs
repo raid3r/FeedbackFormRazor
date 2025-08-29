@@ -1,11 +1,22 @@
-﻿using System.Net.Mail;
+﻿using Microsoft.Extensions.Options;
+using System.Net.Mail;
 
 namespace FeedbackFormRazor.Models.Services.Feedback;
 
-public class SendFeedbackToEmail : IFeedbackSender
+public class SendFeedbackToEmail(IOptions<SendFeedbackToEmailOptions> options) : IFeedbackSender
 {
+
     public async Task SendFeedbackAsync(FeedbackForm feedbackForm)
     {
+        // Змінні параметри
+        var from = options.Value.EmailFrom;
+        var to = options.Value.EmailTo;
+        var password = options.Value.MailServerPassword;
+        var mailServerHost = options.Value.MailServerHost;
+        var mailServerPort = options.Value.MailServerPort;
+        var mailSubject = options.Value.MailSubject;
+
+
         // сформувати листа
 
         var htmlContent = $@"
@@ -25,15 +36,11 @@ public class SendFeedbackToEmail : IFeedbackSender
         </div>
 ";
 
-        var from = "";
-        var to = "";
-        var password = ""; // Use app password
-
         using (MailMessage mail = new MailMessage())
         {
             mail.From = new MailAddress(from);
             mail.To.Add(to);
-            mail.Subject = "New Feedback Received";
+            mail.Subject = mailSubject;
             mail.Body = htmlContent;
             mail.IsBodyHtml = true;
 
@@ -43,7 +50,7 @@ public class SendFeedbackToEmail : IFeedbackSender
                 mail.Attachments.Add(attachment);
             }
 
-            using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+            using (SmtpClient smtp = new SmtpClient(mailServerHost, mailServerPort))
             {
                 smtp.Credentials = new System.Net.NetworkCredential(from, password); // Use app password
                 smtp.EnableSsl = true;
