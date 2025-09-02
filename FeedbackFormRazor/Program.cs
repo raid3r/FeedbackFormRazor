@@ -1,3 +1,4 @@
+using FeedbackFormRazor.Models.Services;
 using FeedbackFormRazor.Models.Services.Feedback;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +8,9 @@ builder.Services.AddRazorPages();
 //builder.Services.AddTransient<IFeedbackSender, StoreFeedbackToFile>();
 //builder.Services.AddTransient<IFeedbackSender, SendFeedbackToTelegram>();
 //builder.Services.AddTransient<IFeedbackSender, SendFeedbackToEmail>();
-builder.Services.AddTransient<IFeedbackSender, StoreFeedbackToJsonArray>();
+builder.Services.AddScoped<IFeedbackSender, StoreFeedbackToJsonArray>();
+builder.Services.AddScoped<FeedbackRepository>();
+builder.Services.AddScoped<UploadedFileStorage>();
 
 
 builder.Services.Configure<SendFeedbackToEmailOptions>(
@@ -60,11 +63,26 @@ app.Run();
  * 
  * Створити сторінку "Відгуки" де будуть виводитися усі відгуки з JSON файлу
  * На сторінці таблиця з відгуками, біля кожного кнопки "Переглянути" та "Видалити"
- * При натисканні на "Переглянути" відкривається вікно з детальною інформацією по відгуку
+ * При натисканні на "Переглянути" відкривається сторінка з детальною інформацією по відгуку
  * При натисканні на "Видалити" - відгук видаляється
  * 
  * Створити сторінку "Перегляд відгуку" де буде детальна інформація по відгуку
  * На ньому виводиться інформація по відгуку а також зображення якщо воно було прикріплене
  * Також є кнопка "Повернутися до списку відгуків"
  * 
- */ 
+ * 3.
+ * Додати виведення по 5 відгуків на сторінку з відгуками
+ * Додати пагінацію (перемикання між сторінками)
+ * 
+ * Додати сортування відгуків по імені (за зростанням та спаданням)
+ * Додати сортування відгуків по email (за зростанням та спаданням)
+ * 
+ * Додати фільтрацію відгуків по імені та email (пошук)
+ * 
+ */
+
+/*
+ * C
+ * 
+ * 
+ */
