@@ -1,0 +1,37 @@
+﻿@page "/feedback/list"
+@model FeedbackFormRazor.Pages.Feedback.FeedbacksModel
+@{
+    ViewData["Title"] = "Feedbacks";
+}
+
+<h1>Feedbacks</h1>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Ім'я</th>
+            <th>Email</th>
+            <th>Buttons</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var feedback in Model.Feedbacks)
+        {
+            <tr>
+                <td>@feedback.Name</td>
+                <td>@feedback.Email</td>
+                <td>
+                    <div class="d-flex">
+                        <a asp-page="/Feedback/FeedbackDetails" asp-route-id="@feedback.Id" class="btn btn-primary btn-sm me-2">Переглянути</a>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@feedback.Id" onsubmit="return confirm('Ви впевнені, що хочете видалити цей відгук?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
+                        </form>
+                    </div>
+
+                    @* <form method="post" asp-page-handler="Delete" asp-route-id="@feedback.Id" onsubmit="return confirm('Ви впевнені, що хочете видалити цей відгук?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
+                    </form> *@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

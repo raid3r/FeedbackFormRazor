@@ -1,0 +1,90 @@
+﻿@page "/feedback/{id}/details"
+@model FeedbackFormRazor.Pages.Feedback.FeedbackDetailsModel
+@{
+    ViewData["Title"] = "Feedback Details";
+}
+
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td>@Model.Feedback?.Name</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>@Model.Feedback?.Email</td>
+                </tr>
+                <tr>
+                    <th>Comment</th>
+                    <td><pre>@Model.Feedback?.Comment</pre></td>
+                </tr>
+                <tr>
+                    <th>Country</th>
+                    <td><pre>@Model.Feedback?.Country</pre></td>
+                </tr>
+                <tr>
+                    <th>Birthday</th>
+                    <td><pre>@Model.Feedback?.Birthday?.ToString("dd.MM.yyyy")</pre></td>
+                </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td>
+                        <pre>@Model.Feedback?.Gender</pre>
+                        
+                        @switch (Model.Feedback?.Gender)
+                        {
+                            case "Чоловіча":
+                                <span class="badge bg-primary">👨</span>
+                                break;
+                            case "Жіноча":
+                                <span class="badge bg-danger">👩</span>
+                                break;
+                            case "Інша":
+                                <span class="badge bg-secondary">🧑</span>
+                                break;
+                            default:
+                                <span class="badge bg-light text-dark">❓</span>
+                                break;
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Favorites</th>
+                    <td>
+                        @if (Model.Feedback != null && Model.Feedback?.Favorites.Count == 0)
+                        {
+                            <em>No favorites selected</em>
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var item in Model.Feedback?.Favorites ?? [])
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                </tr>
+                @if (! string.IsNullOrEmpty(Model.Feedback?.ImageFile))
+                {
+                    <tr>
+                        <th>Зображення</th>
+                        <td>
+                            <img src="~/uploads/@Model.Feedback?.ImageFile.Replace("wwwroot\\uploads\\", "")" class="img-thumbnail" />
+                        </td>
+                    </tr>
+                }
+                
+            </tbody>
+        </table>
+
+        <a asp-page="/Feedback/Feedbacks" class="btn btn-secondary">Back to List</a>
+
+    </div>
+</div>

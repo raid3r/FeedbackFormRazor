@@ -1,0 +1,173 @@
+﻿@page "/feedback/form"
+@model FeedbackFormRazor.Pages.Feedback.FeedbackPageModel
+@{
+    ViewData["Title"] = "Feedback Form";
+
+    
+
+    var countries = new[]
+    {
+        new SelectListItem { Value = string.Empty, Text = string.Empty },
+        new SelectListItem { Value = "Сполучені Штати", Text = "Сполучені Штати" },
+        new SelectListItem { Value = "Канада", Text = "Канада" },
+        new SelectListItem { Value = "Велика Британія", Text = "Велика Британія" },
+        new SelectListItem { Value = "Австралія", Text = "Австралія" },
+        new SelectListItem { Value = "Індія", Text = "Індія" },
+        new SelectListItem { Value = "Україна", Text = "Україна" }
+    };
+}
+
+
+
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label asp-for="FeedbackForm.Name" class="form-label"></label>
+                <input asp-for="FeedbackForm.Name" class="form-control" />
+                <span asp-validation-for="FeedbackForm.Name" class="text-danger"></span>
+                
+            </div>
+            <div class="mb-3">
+                <label asp-for="FeedbackForm.Email" class="form-label"></label>
+                <input asp-for="FeedbackForm.Email" class="form-control" />
+                <span asp-validation-for="FeedbackForm.Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FeedbackForm.Comment" class="form-label"></label>
+                <textarea asp-for="FeedbackForm.Comment" rows="5" class="form-control"></textarea>
+                <span asp-validation-for="FeedbackForm.Comment" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="FeedbackForm.Country"></label>
+                <select asp-for="FeedbackForm.Country" class="form-select" asp-items="countries"></select>
+                <span asp-validation-for="FeedbackForm.Country" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="FeedbackForm.Birthday"></label>
+                <input asp-for="FeedbackForm.Birthday" type="date" class="form-control" />
+                <span asp-validation-for="FeedbackForm.Birthday" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="FeedbackForm.Gender"></label>
+                <div class="form-check">
+                    <input asp-for="FeedbackForm.Gender" value="Чоловіча" class="form-check-input" type="radio" id="male" />
+                    <label class="form-check-label" for="male">Чоловіча</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="FeedbackForm.Gender" value="Жіноча" class="form-check-input" type="radio" id="female" />
+                    <label class="form-check-label" for="female">Жіноча</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="FeedbackForm.Gender" value="Інша" class="form-check-input" type="radio" id="other" />
+                    <label class="form-check-label" for="other">Інша</label>
+                </div>
+                <span asp-validation-for="FeedbackForm.Gender" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="FeedbackForm.Favorites"></label>
+                @{
+                    var options = new List<string> { "Швидкість роботи", "Дизайн", "Фукнціональність", "Зручність", "Кольрова схема" };
+                    for (int i = 0; i < options.Count; i++)
+                    {
+                        <div class="form-check">
+                            <input value="@options[i]"
+                                   name="FeedbackForm.Favorites"
+                                   class="form-check-input" type="checkbox" id="fav_option_@i"
+                                   @(Model.FeedbackForm.Favorites.Contains(options[i]) ? "checked" : "") />
+                            <label class="form-check-label" for="fav_option_@i">@options[i]</label>
+                        </div>
+                    }
+                }
+                <span asp-validation-for="FeedbackForm.Favorites" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="FeedbackForm.Image" class="form-label"></label>
+                <input asp-for="FeedbackForm.Image" type="file" accept="*.jpeg,*.jpg,*.png" class="form-control" />
+                <span asp-validation-for="FeedbackForm.Image" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td>@Model.FeedbackForm.Name</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>@Model.FeedbackForm.Email</td>
+                </tr>
+                <tr>
+                    <th>Comment</th>
+                    <td><pre>@Model.FeedbackForm.Comment</pre></td>
+                </tr>
+                <tr>
+                    <th>Country</th>
+                    <td><pre>@Model.FeedbackForm.Country</pre></td>
+                </tr>
+                <tr>
+                    <th>Birthday</th>
+                    <td><pre>@Model.FeedbackForm.Birthday?.ToString("dd.MM.yyyy")</pre></td>
+                </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td>
+                        <pre>@Model.FeedbackForm.Gender</pre>
+                        
+                        @switch (Model.FeedbackForm.Gender)
+                        {
+                            case "Чоловіча":
+                                <span class="badge bg-primary">👨</span>
+                                break;
+                            case "Жіноча":
+                                <span class="badge bg-danger">👩</span>
+                                break;
+                            case "Інша":
+                                <span class="badge bg-secondary">🧑</span>
+                                break;
+                            default:
+                                <span class="badge bg-light text-dark">❓</span>
+                                break;
+                        }
+                    
+                    </td>
+                </tr>
+                <tr>
+                    <th>Favorites</th>
+                    <td>
+                        @if (Model.FeedbackForm.Favorites.Count == 0)
+                        {
+                            <em>No favorites selected</em>
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var item in Model.FeedbackForm.Favorites)
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
