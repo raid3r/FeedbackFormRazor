@@ -8,8 +8,24 @@
 <table class="table table-hover">
     <thead>
         <tr>
-            <th>Ім'я</th>
-            <th>Email</th>
+            <th>
+                <a asp-route-PageNumber="@Model.PageNumber"
+                   asp-route-SortField="Name"
+                   asp-route-SortOrder="@(Model.SortField == "Name" && Model.SortOrder == "asc" ? "desc" : "asc")">Ім'я</a>
+                <span>@(Model.SortField == "Name" ? Model.SortOrder == "asc" ? "↓" : "↑" : "")</span>
+            </th>
+            <th>
+                <a asp-route-PageNumber="@Model.PageNumber"
+                   asp-route-SortField="Email"
+                   asp-route-SortOrder="@(Model.SortField == "Email" && Model.SortOrder == "asc" ? "desc" : "asc")">Email</a>
+                <span>@(Model.SortField == "Email" ? Model.SortOrder == "asc" ? "↓" : "↑" : "")</span>
+            </th>
+            <th>
+                <a asp-route-PageNumber="@Model.PageNumber"
+                   asp-route-SortField="Gender"
+                   asp-route-SortOrder="@(Model.SortField == "Gender" && Model.SortOrder == "asc" ? "desc" : "asc")">Стать</a>
+                <span>@(Model.SortField == "Gender" ? Model.SortOrder == "asc" ? "↓" : "↑" : "")</span>
+            </th>
             <th>Buttons</th>
         </tr>
     </thead>
@@ -19,6 +35,25 @@
             <tr>
                 <td>@feedback.Name</td>
                 <td>@feedback.Email</td>
+                <td>
+                    @switch (feedback.Gender)
+                    {
+                        case "Чоловіча":
+                            <span class="badge bg-primary">👨</span>
+                            <span>Чоловіча</span>
+                            break;
+                        case "Жіноча":
+                            <span class="badge bg-danger">👩</span>
+                            <span>Жіноча</span>
+                            break;
+                        case "Інша":
+                            <span class="badge bg-secondary">🧑</span>
+                            <span>Інша</span>
+                            break;
+                        default:
+                            <span class="badge bg-light text-dark">❓</span>
+                            break;
+                    }
                 <td>
                     <div class="d-flex">
                         <a asp-page="/Feedback/FeedbackDetails" asp-route-id="@feedback.Id" class="btn btn-primary btn-sm me-2">Переглянути</a>
@@ -35,3 +70,36 @@
         }
     </tbody>
 </table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        @if (Model.PageNumber > 1)
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-route-SortField="@Model.SortField"
+                   asp-route-SortOrder="@Model.SortOrder"
+                   asp-route-PageNumber="@(Model.PageNumber - 1)">Попередня</a>
+            </li>
+        }
+        @for (var i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                <a class="page-link"
+                   asp-route-SortField="@Model.SortField"
+                   asp-route-SortOrder="@Model.SortOrder"
+                   asp-route-PageNumber="@i">@i</a>
+            </li>
+        }
+
+        @if (Model.PageNumber < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-route-SortField="@Model.SortField"
+                   asp-route-SortOrder="@Model.SortOrder"
+                   asp-route-PageNumber="@(Model.PageNumber + 1)">Наступна</a>
+            </li>
+        }
+    </ul>
+</nav>
